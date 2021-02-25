@@ -15,4 +15,4 @@ with open(file) as fil:
         p = fil.readline().split()
         vs.append((int(p[0]), p[1:]))
 
-    run_sim(intersections, vs)
+    run_sim(intersections, vs, time=d, points=f)

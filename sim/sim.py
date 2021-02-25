@@ -1,7 +1,7 @@
 from sim.Model import Intersection, Street, Car
 
 
-def run_sim(ins, vs, schedule):
+def run_sim(ins, vs, time, points, schedule):
     intersections = []
     streets = {}
     cars = []
@@ -44,16 +44,27 @@ def run_sim(ins, vs, schedule):
 
 
     # Run simulation
-    for x in range(10000):
+    t = 0
+    while t <= time:
+        t += 1
         for i in intersections:
             i.sim()
         for s in streets:
             s.sim()
 
-    # Count finished cars
+        # Count finished cars
+        finished = 0
+        for c in cars:
+            if c.current_street is None:
+                finished += 1
+        if finished == len(cars):
+            break
+
+    score = time-t
     finished = 0
     for c in cars:
         if c.current_street is None:
             finished += 1
+    score += finished*points
 
-    return finished
+    return score
