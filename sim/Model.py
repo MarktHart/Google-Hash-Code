@@ -31,7 +31,7 @@ class Intersection:
             self.cur_green_remaining = self.schedule[0][1]
 
     def add_car(self, car):
-        self.queues[car.get_current_street()].append(car)
+        self.queues[car.current_street].append(car)
 
     def sim(self):
         if self.cur_green_id != -1:
