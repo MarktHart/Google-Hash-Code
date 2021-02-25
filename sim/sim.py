@@ -27,7 +27,6 @@ def run_sim(ins, vs, time, points, schedule):
 
     # Create cars
     for r in vs:
-        print(r)
         route = []
         for s in r[1]:
             route.append(streets.get(s))
@@ -37,9 +36,9 @@ def run_sim(ins, vs, time, points, schedule):
     # Set schedule
     # output = [("intersection id", [("straatnaam", int(s))])]
     for (inter_id, s) in schedule:
-        obj_schedule = {}
+        obj_schedule = []
         for (name, time) in s:
-            obj_schedule[name] = (streets[name], time)
+            obj_schedule.append((streets[name], time))
         intersections[inter_id].set_schedule(obj_schedule)
 
 
@@ -49,8 +48,8 @@ def run_sim(ins, vs, time, points, schedule):
         t += 1
         for i in intersections:
             i.sim()
-        for s in streets:
-            s.sim()
+        for name in streets:
+            streets[name].sim()
 
         # Count finished cars
         finished = 0

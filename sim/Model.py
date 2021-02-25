@@ -21,9 +21,7 @@ class Intersection:
     def set_schedule(self, schedule: list):
         self.schedule = schedule
         # Remove 0-length items
-        for (s, t) in self.schedule:
-            if t == 0:
-                self.schedule.remove((s, t))
+        self.schedule = [x for x in self.schedule if x[1] > 0]
         if len(self.schedule) == 0:
             self.cur_green_id = -1
         else:
@@ -45,9 +43,11 @@ class Intersection:
             else:
                 self.cur_green_remaining = self.cur_green_remaining - 1
 
-            c = self.queues.get(self.schedule[self.cur_green_id][0]).pop(0)
-            if c is not None:
-                c.get_next_street().enter_car(c)
+            q = self.queues.get(self.schedule[self.cur_green_id][0])
+            if len(q) > 0:
+                c = q.pop(0)
+                if c is not None:
+                    c.get_next_street().enter_car(c)
 
 
 class Street:
@@ -76,13 +76,16 @@ class Street:
         self.traffic[car] = self.length
 
     def sim(self):
-        for c, t in self.traffic:
+        end_car = None
+
+        for c, t in self.traffic.items():
+            self.traffic[c] = t - 1
             if t == 1:
-                # Add to intersection
-                del self.traffic[c]
-                self.end_intersection.add_car(c)
-            else:
-                self.traffic[c] = t-1
+                end_car = c
+
+        if end_car is not None:
+            del self.traffic[end_car]
+            self.end_intersection.add_car(end_car)
 
 
 class Car:
